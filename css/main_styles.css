@@ -1,0 +1,35 @@
+.logout {
+  border: none;
+  background: none;
+  color: blue;
+  cursor: pointer;
+}
+
+.container {
+  max-width: 100% !important;
+}
+
+.id {
+  border: none;
+  background: none;
+  max-width: 30px;
+}
+
+.Alta {
+  border-left: red solid 3px;
+}
+
+.Media {
+  border-left: yellow solid 3px;
+}
+
+.Baja {
+  border-left: green solid 3px;
+}
+
+thead tr th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #ffffff;
+}
