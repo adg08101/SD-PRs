@@ -33,3 +33,25 @@ thead tr th {
   z-index: 10;
   background-color: #ffffff;
 }
+
+.output {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.margin-top {
+  margin-top: 15px;
+}
+
+.input_size {
+  width: 50px;
+}
+
+.full_width {
+  width: 100%;
+  font-size: 5px;
+}
+
+.hidden {
+  display: none;
+}

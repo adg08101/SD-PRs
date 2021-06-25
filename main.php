@@ -67,25 +67,22 @@ if (!isset($_SESSION['session'])) {
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Tipo</label>
                     <select class="form-control" id="type" name="tipo">
+                        <option>PR</option>
                         <option>Tarea</option>
                         <option>Reunión</option>
                         <option>Otro</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="exampleFormControlSelect1">Prioridad</label>
-                    <select class="form-control" id="priority" name="prioridad">
-                        <option>Baja</option>
-                        <option>Media</option>
-                        <option>Alta</option>
-                    </select>
+                    <label for="tarea_id">Tarea ID</label>
+                    <input class="form-control" id="tarea_id" name="prioridad">
                 </div>
                 <div class="form-group">
-                    <label for="exampleFormControlSelect1">Fecha</label>
-                    <input class="form-control" type="datetime-local" name="fecha">
+                    <label for="tarea_url">Tarea URL</label>
+                    <textarea class="form-control" name="fecha"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Tarea</label>
+                    <label for="exampleFormControlTextarea1">PRs</label>
                     <textarea class="form-control" id="task"
                               rows="3" name="tarea" required></textarea>
                 </div>
@@ -96,14 +93,14 @@ if (!isset($_SESSION['session'])) {
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th scope="col" style="display: none">Id</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Responsable</th>
-                    <th scope="col">Prioridad</th>
-                    <th scope="col">Fecha</th>
-                    <th scope="col">Tarea</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Operaciones</th>
+                    <th class="col-sm-1" scope="col" style="display: none">Id</th>
+                    <th class="col-sm-1" scope="col">Tipo</th>
+                    <th class="col-sm-1" scope="col">Responsable</th>
+                    <th class="col-sm-1" scope="col">ID</th>
+                    <th class="col-sm-3" scope="col">Tarea URL</th>
+                    <th class="col-sm-3" scope="col">PR(s)</th>
+                    <th class="col-sm-1" scope="col">Estado</th>
+                    <th class="col-sm-1" scope="col">Operaciones</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -117,8 +114,9 @@ if (!isset($_SESSION['session'])) {
                                 name="id" class="id">
                             </th>
                             <td>
-                                <select id="type" name="tipo">
+                                <select id="type" name="tipo" class="input_size">
                                     <option><?= $row['tipo']; ?></option>
+                                    <option>PR</option>
                                     <option>Tarea</option>
                                     <option>Reunión</option>
                                     <option>Otro</option>
@@ -142,21 +140,14 @@ if (!isset($_SESSION['session'])) {
                                 </select>
                             </td>
                             <td>
-                                <select id="priority" name="prioridad">
-                                    <option><?= $row['prioridad']; ?></option>
-                                    <option>Baja</option>
-                                    <option>Media</option>
-                                    <option>Alta</option>
-                                </select>
+                                <input class="input_size" id="priority" name="prioridad" value="<?= $row['prioridad']; ?>">
                             </td>
                             <td>
-                                <input type="datetime-local"
-                                       name="fecha" value="<?= $row['fecha_hora']; ?>">
-                                </td>
+                                <textarea onclick="show_update(this.id)" id="url_<?= $row['prioridad']; ?>" class="full_width" name="fecha"><?= $row['fecha_hora']; ?></textarea>
                             <td>
-                                   <textarea id="task"
-                                             title="<?= trim($row['tarea']); ?>"
-                                             rows="3" name="tarea" required><?= trim($row['tarea']); ?></textarea>
+                                   <textarea onclick="show_update(this.id)" id="pr_<?= $row['prioridad']; ?>" class="full_width" id="task"
+                                             title="<?= $row['tarea']; ?>"
+                                             rows="3" name="tarea" required><?= $row['tarea']; ?></textarea>
                             </td>
                             <td>
                                 <select id="priority"
@@ -169,10 +160,10 @@ if (!isset($_SESSION['session'])) {
                             </td>
                             <td>
                                 <input type="submit" class="btn btn-primary
-                                btn-sm" value="Guardar">
+                                btn-sm" value="S" id="<?= $row['prioridad']; ?>_btn_save">
                                 <input type="button" class="btn btn-secondary
-                                btn-sm" value="Eliminar" onclick="delete_task
-                                (<?= $row['id']; ?>)">
+                                btn-sm" value="D" onclick="delete_task
+                                ('<?= $row['id']; ?>', '<?= $row['prioridad']; ?>')">
                             </td>
                             </form>
                         </tr>
@@ -180,6 +171,27 @@ if (!isset($_SESSION['session'])) {
                 <?php } ?>
                 </tbody>
             </table>
+            <?php
+            $mysqli = new mysqli("localhost", "id16643740_root",
+            "ContraTSK2021-*", "id16643740_tasks");
+            if ($mysqli->connect_errno) {
+            header('Location: logout.php');
+            die();
+            } else {
+            $sql = "SELECT * FROM tareas WHERE mostrar = 1 AND estado = 'Por hacer'";
+            $result = $mysqli->query($sql);
+            $mysqli->close();
+            }
+            ?>
+            <div class="hidden" id="edit_container">
+                <textarea id="edit_area" class="output margin-top"></textarea>
+                <input class="btn btn-primary" type="button" value="Save" onclick="save()">
+                <input class="btn btn-secondary" type="button" value="Cancel" onclick="cancel()">
+            </div>
+            <div class="container output margin-top">
+                <input class="btn btn-primary" type="button" value="Print" onclick="print()">
+                <textarea id="output_format" class="output margin-top"><?php if ($result->num_rows > 0) { while($row = $result->fetch_assoc()) { ?><?= 'Task '.$row['prioridad']; ?> - <?= $row['fecha_hora']; ?><?= $row['tarea']; ?><?php } ?><?php } ?></textarea>
+            </div>
         </div>
     </div>
 </div>
