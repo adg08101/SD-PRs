@@ -10,7 +10,7 @@ if (!isset($_SESSION['session'])) {
         header('Location: logout.php');
         die();
     } else {
-        $sql = "SELECT * FROM tareas WHERE mostrar = 1";
+        $sql = "SELECT * FROM tareas WHERE mostrar = 1 ORDER BY estado ASC";
         $result = $mysqli->query($sql);
         $mysqli->close();
     }
@@ -59,6 +59,7 @@ if (!isset($_SESSION['session'])) {
                         <option>Ovi</option>
                         <option>Rose</option>
                         <option>Yunior</option>
+                        <option>Yasel</option>
                         <option>Fernando</option>
                         <option>Dayana</option>
                         <option>Angel</option>
@@ -107,7 +108,7 @@ if (!isset($_SESSION['session'])) {
                 <?php
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) { ?>
-                        <tr class="<?= $row['prioridad']; ?>">
+                        <tr class="<?= str_replace(" ", "_", $row['estado']); ?>">
                             <form action="update.php" method="post">
                             <th scope="row" style="display: none">
                                 <input type="text" value="<?= $row['id']; ?>"
@@ -134,6 +135,7 @@ if (!isset($_SESSION['session'])) {
                                     <option>Ovi</option>
                                     <option>Rose</option>
                                     <option>Yunior</option>
+                                    <option>Yasel</option>
                                     <option>Fernando</option>
                                     <option>Dayana</option>
                                     <option>Angel</option>
@@ -144,6 +146,7 @@ if (!isset($_SESSION['session'])) {
                             </td>
                             <td>
                                 <textarea onclick="show_update(this.id)" id="url_<?= $row['prioridad']; ?>" class="full_width" name="fecha"><?= $row['fecha_hora']; ?></textarea>
+                                <a href="<?= $row['fecha_hora']; ?>" target="_blank">Task <?= $row['prioridad']; ?></a>
                             <td>
                                    <textarea onclick="show_update(this.id)" id="pr_<?= $row['prioridad']; ?>" class="full_width" id="task"
                                              title="<?= $row['tarea']; ?>"
@@ -154,7 +157,7 @@ if (!isset($_SESSION['session'])) {
                                         name="estado">
                                     <option> <?= $row['estado']; ?></option>
                                     <option>Por hacer</option>
-                                    <option>En progreso</option>
+                                    <option>On hold</option>
                                     <option>Hecha</option>
                                 </select>
                             </td>

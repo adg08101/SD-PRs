@@ -15,15 +15,15 @@
   max-width: 30px;
 }
 
-.Alta {
+.Por_hacer {
   border-left: red solid 3px;
 }
 
-.Media {
+.On_hold {
   border-left: yellow solid 3px;
 }
 
-.Baja {
+.Hecha {
   border-left: green solid 3px;
 }
 
@@ -44,7 +44,7 @@ thead tr th {
 }
 
 .input_size {
-  width: 50px;
+  width: 80px;
 }
 
 .full_width {
