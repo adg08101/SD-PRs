@@ -14,6 +14,11 @@ window.addEventListener('load', function () {
       obj.setValue(values)
     }
   }
+  let task_id = document.getElementById('tarea_id');
+  let task_url = document.getElementById('tarea_url');
+  task_id.addEventListener('change', function () {
+    task_url.value = "https://sprints.zoho.com/team/vertrax#itemdetails/P24/" + task_id.value.replace('SD-', '');
+  });
 })
 function delete_task(id, num) {
   if (confirm("Seguro que desea eliminar la tarea " + num + "?")) {

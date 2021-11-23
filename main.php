@@ -76,11 +76,11 @@ if (!isset($_SESSION['session'])) {
                 </div>
                 <div class="form-group">
                     <label for="tarea_id">Tarea ID</label>
-                    <input class="form-control" id="tarea_id" name="prioridad">
+                    <input class="form-control" id="tarea_id" value="SD-I" name="prioridad">
                 </div>
                 <div class="form-group">
                     <label for="tarea_url">Tarea URL</label>
-                    <textarea class="form-control" name="fecha"></textarea>
+                    <textarea class="form-control" name="fecha" id="tarea_url"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">PRs</label>
